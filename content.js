@@ -37,20 +37,28 @@ const findVideo = async () => {
 const connectToServices = () => {
     const backgroundMessenger = chrome.runtime.connect({ name: "uvpc-b" });
     backgroundMessenger.onMessage.addListener(message => {
-        if (message.listeningTo) {
-            findVideo().then(video => {
-                backgroundMessenger.postMessage({
-                    badgeText: video.playbackRate,
-                    video,
-                });
+        findVideo().then(
+            video => {
+                if (message.listeningTo) {
+                    updateBadgeText(backgroundMessenger, video);
+                }
+                if (message.newSpeed) {
+                    video.playbackRate = message.newSpeed;
+                    updateBadgeText(backgroundMessenger, video);
+                }
+            },
+            error => {
+                console.info("No video found yet\n", error);
+                backgroundMessenger.disconnect();
             });
-        } else {
-            backgroundMessenger.disconnect();
-        }
-    });
-    backgroundMessenger.onDisconnect.addListener(() => {
-        console.error("Disconnected from backgroundMessenger");
     });
 };
+
+const updateBadgeText = (port, video) => {
+    port.postMessage({
+        badgeText: video.playbackRate,
+        video,
+    });
+}
 
 window.addEventListener("load", connectToServices);
