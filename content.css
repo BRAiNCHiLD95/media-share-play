@@ -1,0 +1,78 @@
+div#playbackController div#uvpc-div {
+    opacity: 0;
+    background: #282828 !important;
+    height: 100px !important;
+    width: 200px !important;
+    padding: 5px !important;
+    position: absolute !important;
+    bottom: calc(100vh - 90vh) !important;
+    right: calc(100vw - 95vw) !important;
+    border-radius: 5px !important;
+    direction: ltr !important;
+    text-align: center;
+}
+
+div#playbackController div#uvpc-div div.playbackSpeeds h3.playback-header {
+    margin: 5px auto !important;
+    font-size: 2em;
+}
+
+div#playbackController div#uvpc-div.active {
+    opacity: 1;
+    -o-transition: opacity 160ms ease;
+    -moz-transition: opacity 160ms ease;
+    transition: opacity 160ms ease;
+    will-change: opacity;
+}
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds div.range-stuff {
+    margin: 50px 15px 0px 15px !important;
+}
+
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds input[type=range] {
+    display: block;
+    width: 100%;
+    margin: 0;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds input[type=range]::-webkit-slider-runnable-track {
+    position: relative;
+    height: 12px;
+    border: 1px solid #b2b2b2;
+    border-radius: 5px;
+    background-color: #e2e2e2;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds input[type=range]::-webkit-slider-thumb {
+    position: relative;
+    top: -5px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #999;
+    -webkit-appearance: none;
+    background-color: #fff;
+    box-shadow: inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds output {
+    position: absolute;
+    top: 40px !important;
+    right: 80px !important;
+    display: block;
+    font-weight: bold;
+    width: 50px;
+    height: 24px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 3px;
+    color: #777;
+    font-size: 1.8em;
+    line-height: 24px;
+    text-align: center;
+}

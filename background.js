@@ -8,42 +8,65 @@
  * channel to communicate between scripts
  */
 const getMessenger = contentMessenger => {
-    let currentTab = contentMessenger.sender.tab;
-    chrome.webNavigation.onHistoryStateUpdated.addListener( details => {
-        if (contentMessenger.name === "uvpc-b") {
-            sendToContentScript(contentMessenger, { listeningTo: currentTab.id, title: currentTab.title });
-        } else {
-            chrome.runtime.connect({ name: "uvpc-b" });
-        }
-        contentMessenger.onDisconnect.addListener(() => {
-            console.info("disconnected from contentMessenger");
-        });
-        contentMessenger.onMessage.addListener((message, sender) => {
+    if ((contentMessenger.name = "uvpc-b")) {
+        const checkForOTTs = (tabId, changeInfo, tab) => {
+            if (changeInfo.url || changeInfo.audible || changeInfo.status === "complete") {
+                let currentUrl = changeInfo.url || tab.url;
+                if (currentUrl && tab.status === "complete") {
+                    if (currentUrl.match(netflixRegex)) {
+                        sendToContentScript(contentMessenger, {
+                            domain: "netflix",
+                            audible: tab.audible,
+                        }, tabId);
+                        return;
+                    }
+                    if (currentUrl.match(apvRegex)) {
+                        sendToContentScript(contentMessenger, {
+                            domain: "primevideo",
+                            audible: tab.audible,
+                        }, tabId);
+                        return;
+                    }
+                }
+            }
+        };
+        contentMessenger.onMessage.addListener(message => {
+            console.log(message);
+            if (message.initiated) {
+                console.log(`connected to ${contentMessenger.sender.tab.title}`);
+                chrome.tabs.onCreated.addListener(checkForOTTs);
+                chrome.tabs.onUpdated.addListener(checkForOTTs);
+            }
             if (message.badgeText) {
                 chrome.browserAction.setBadgeText({
                     text: message.badgeText + "x",
-                    tabId: sender.sender.tab.id,
+                    tabId: contentMessenger.sender.tab.id,
                 });
                 chrome.browserAction.setBadgeBackgroundColor({
                     color: "#000000",
-                    tabId: sender.sender.tab.id,
-                });
-                contentMessenger.postMessage({
-                    newSpeed: 1.5,
+                    tabId: contentMessenger.sender.tab.id,
                 });
             }
         });
-    })
+        contentMessenger.onDisconnect.addListener(() => {
+            console.info("disconnected from backgroundjs");
+            chrome.tabs.onCreated.removeListener(checkForOTTs);
+            chrome.tabs.onUpdated.removeListener(checkForOTTs);
+            contentMessenger = null;
+        });
+    }
 };
 
-const sendToContentScript = (port, message) => {
-    port.postMessage(message);
-}
+const sendToContentScript = (port, message, tabId) => {
+    if (port) {
+        console.log(`SENDING ${JSON.stringify(message, null, 2)} to Tab #${tabId}`);
+        chrome.tabs.sendMessage(tabId, message);
+    } else {
+        console.log("PORT GONE!");
+    }
+};
 
-chrome.runtime.onStartup.addListener(() => {
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-        if (tab.status === 'complete') {
-            chrome.runtime.onConnect.addListener(getMessenger);
-        }
-    })
-});
+const netflixRegex = /(http(s)?:\/\/.)?(www\.)?(netflix.com\/watch)/;
+const apvRegex = /(http(s)?:\/\/.)?(www\.)?(primevideo.com\/detail)/;
+
+chrome.runtime.onConnect.addListener(getMessenger);
