@@ -1,30 +1,30 @@
 {
-    "name": "Ultimate Video Playback Controller",
-    "description": "An Ultimate Controller for all your HTML5 Video Playback Speed Needs",
-    "version": "1.1.0",
-    "manifest_version": 2,
-    "icons": {
-        "128": "images/icon_128.png"
-    },
-    "browser_action": {
-        "default_title": "Ultimate Video Playback Controller",
-        "default_icon": {
-            "16": "images/icon_16.png",
-            "24": "images/icon_24.png",
-            "32": "images/icon_32.png"
-        },
-        "default_popup": "popup.html"
-    },
-    "background": {
-        "scripts": ["background.js"],
-        "persistent": false
-    },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["content.js"],
-            "css": ["content.css"]
-        }
-    ],
-    "permissions": ["tabs"]
+	"name": "Ultimate Video Playback Controller",
+	"description": "An Ultimate Controller for all your HTML5 Video Playback Speed Needs",
+	"version": "1.1.0",
+	"manifest_version": 2,
+	"icons": {
+		"128": "images/icon_128.png"
+	},
+	"browser_action": {
+		"default_title": "Ultimate Video Playback Controller",
+		"default_icon": {
+			"16": "images/icon_16.png",
+			"24": "images/icon_24.png",
+			"32": "images/icon_32.png"
+		},
+		"default_popup": "popup.html"
+	},
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"],
+			"css": ["content.css"]
+		}
+	],
+	"permissions": ["tabs"]
 }

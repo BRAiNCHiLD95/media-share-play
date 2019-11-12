@@ -4,7 +4,7 @@
  */
 
 const getMessenger = contentMessenger => {
-    console.log(chrome);
+	console.log(chrome);
 };
 
 window.addEventListener("load", getMessenger);
