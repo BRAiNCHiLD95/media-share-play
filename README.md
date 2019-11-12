@@ -5,5 +5,5 @@
 A chrome extension to control playback rate for OTT platforms like -
 
 - [x] Netflix,
-- [ ] Amazon Prime Video,
+- [x] Amazon Prime Video,
 - [ ] Hotstar, etc.

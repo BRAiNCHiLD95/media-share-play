@@ -1,7 +1,7 @@
 {
 	"name": "Ultimate Video Playback Controller",
 	"description": "An Ultimate Controller for all your HTML5 Video Playback Speed Needs",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"manifest_version": 2,
 	"icons": {
 		"128": "images/icon_128.png"
