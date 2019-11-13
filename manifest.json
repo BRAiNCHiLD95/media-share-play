@@ -26,5 +26,6 @@
 			"css": ["content.css"]
 		}
 	],
+	"web_accessible_resources": ["images/cogs.svg"],
 	"permissions": ["tabs"]
 }
