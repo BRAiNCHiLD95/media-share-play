@@ -21,7 +21,14 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["<all_urls>"],
+			"matches": [
+				"http://www.netflix.com/watch/*",
+				"https://www.netflix.com/watch/*",
+				"http://www.primevideo.com/detail/*",
+				"https://www.primevideo.com/detail/*",
+				"http://www.hotstar.com/in*",
+				"https://www.hotstar.com/in*"
+			],
 			"js": ["content.js"],
 			"css": ["content.css"]
 		}
