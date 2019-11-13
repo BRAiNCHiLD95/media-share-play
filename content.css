@@ -1,120 +1,138 @@
-/* CSS for Netflix */
+/* Default Styles */
 
-.PlayerControlsNeo__button-control-row div#playbackController div#uvpc-div {
-	opacity: 0;
-	visibility: hidden;
-	background: #282828 !important;
+div#playbackController div#uvpc-div {
+	position: absolute !important;
+	visibility: hidden !important;
+	background: #111111 !important;
 	height: 100px !important;
 	width: 200px !important;
 	padding: 5px !important;
-	position: absolute !important;
-	bottom: calc(100vh - 90vh) !important;
-	right: calc(100vw - 95vw) !important;
 	border-radius: 5px !important;
 	direction: ltr !important;
 	text-align: center !important;
+	opacity: 0 !important;
 }
 
-.PlayerControlsNeo__button-control-row
-	div#playbackController
-	div#uvpc-div
-	div.playbackSpeeds
-	h3.playback-header {
-	margin: 5px auto !important;
-	font-size: 2em !important;
-}
-
-.PlayerControlsNeo__button-control-row
-	div#playbackController
-	div#uvpc-div.active {
-	opacity: 0.69;
-	visibility: visible;
+div#playbackController div#uvpc-div.active {
+	opacity: 0.69 !important;
+	visibility: visible !important;
 	-o-transition: opacity 160ms ease visibility 160ms linear;
 	-moz-transition: opacity 160ms ease visibility 160ms linear;
 	transition: opacity 160ms ease visibility 160ms linear;
 	will-change: opacity, visibility;
 }
 
-.PlayerControlsNeo__button-control-row
-	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	div.range-stuff {
+div#playbackController div#uvpc-div div.playbackSpeeds h3.playback-header {
+	margin: 5px auto !important;
+	font-size: initial !important;
+	text-transform: capitalize !important;
+}
+
+div#playbackController div#uvpc-div.active div.playbackSpeeds div.range-stuff {
 	margin: 50px 15px 0px 15px !important;
 }
 
-.PlayerControlsNeo__button-control-row
-	div#playbackController
+div#playbackController div#uvpc-div.active div.playbackSpeeds input#uvpc-value {
+	display: block !important;
+	width: 100% !important;
+	margin: 0px !important;
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	outline: none !important;
+}
+
+div#playbackController
 	div#uvpc-div.active
 	div.playbackSpeeds
-	input[type="range"] {
-	display: block;
-	width: 100%;
-	margin: 0;
-	-webkit-appearance: none;
-	outline: none;
+	input#uvpc-value::-webkit-slider-runnable-track {
+	position: relative !important;
+	height: 12px !important;
+	border: 1px solid #b2b2b2 !important;
+	border-radius: 5px !important;
+	background-color: #e2e2e2 !important;
+	box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
-.PlayerControlsNeo__button-control-row
-	div#playbackController
+div#playbackController
 	div#uvpc-div.active
 	div.playbackSpeeds
-	input[type="range"]::-webkit-slider-runnable-track {
-	position: relative;
-	height: 12px;
-	border: 1px solid #b2b2b2;
-	border-radius: 5px;
-	background-color: #e2e2e2;
-	box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+	input#uvpc-value::-webkit-slider-thumb {
+	position: relative !important;
+	top: -5px !important;
+	width: 20px !important;
+	height: 20px !important;
+	border: 1px solid #999 !important;
+	-webkit-appearance: none !important;
+	appearance: none !important;
+	background-color: #fff !important;
+	box-shadow: inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25) !important;
+	border-radius: 100% !important;
+	cursor: pointer !important;
 }
 
-.PlayerControlsNeo__button-control-row
-	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	input[type="range"]::-webkit-slider-thumb {
-	position: relative;
-	top: -5px;
-	width: 20px;
-	height: 20px;
-	border: 1px solid #999;
-	-webkit-appearance: none;
-	background-color: #fff;
-	box-shadow: inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
-	border-radius: 100%;
-	cursor: pointer;
+div#playbackController div#uvpc-div.active div.playbackSpeeds output {
+	position: absolute !important;
+	top: 40px !important;
+	right: 80px !important;
+	display: block !important;
+	font-weight: bold !important;
+	width: 50px !important;
+	height: 24px !important;
+	border: 1px solid #e2e2e2 !important;
+	background-color: #fff !important;
+	border-radius: 3px !important;
+	color: #777 !important;
+	font-size: initial !important;
+	line-height: 24px !important;
+	text-align: center !important;
 }
 
-.PlayerControlsNeo__button-control-row div#playbackController button#uvpc-btn {
-	min-height: 48.5px !important;
-	min-width: 45.7px !important;
-	border: 3px solid transparent !important;
-	font-size: 4.2em !important;
-	padding: 0px 0px 10.3px !important;
+div#playbackController button#uvpc-btn {
+	border: none !important;
+	outline: none !important;
 }
 
-.PlayerControlsNeo__button-control-row
+div#playbackController button#uvpc-btn img#cogsIcon {
+	height: 32px !important;
+	width: 32px !important;
+	padding: 0px 0px 15px 0px !important;
+	transition: transform 0.1s ease;
+}
+
+/* Netflix-specific Styles */
+
+div.PlayerControlsNeo__button-control-row div#playbackController div#uvpc-div {
+	bottom: calc(100vh - 90vh) !important;
+	right: calc(100vw - 95vw) !important;
+	background: #282828 !important;
+	opacity: 1 !important;
+}
+
+div.PlayerControlsNeo__button-control-row
 	div#playbackController
 	div#uvpc-div.active
 	div.playbackSpeeds
 	output {
-	position: absolute;
-	top: 40px !important;
-	right: 80px !important;
-	display: block;
-	font-weight: bold;
-	width: 50px;
-	height: 24px;
-	border: 1px solid #e2e2e2;
-	background-color: #fff;
-	border-radius: 3px;
-	color: #777;
-	font-size: 1.8em;
-	line-height: 24px;
-	text-align: center;
+	font-size: 1.8em !important;
 }
 
-/* CSS for Amazon Prime Video */
+div.PlayerControlsNeo__button-control-row
+	div#playbackController
+	button#uvpc-btn {
+	height: 48px !important;
+	width: 45px !important;
+	font-size: 4.2em !important;
+	padding: 5px 0px 10px 0px !important;
+}
+
+div.PlayerControlsNeo__button-control-row
+	div#playbackController
+	button#uvpc-btn
+	img#cogsIcon:hover {
+	transform: scale(1.1) !important;
+}
+
+/* Prime Video-specific Styles */
 
 div.controlsOverlayTopRight
 	div.topPanel
@@ -123,46 +141,9 @@ div.controlsOverlayTopRight
 	div.hideableTopButtons
 	div#playbackController
 	div#uvpc-div {
-	opacity: 0;
-	visibility: hidden;
-	background: #454545 !important;
-	height: 100px !important;
-	width: 200px !important;
-	padding: 5px !important;
-	position: absolute !important;
 	top: calc(100vh - 88vh) !important;
 	right: calc(100vw - 90vw) !important;
-	border-radius: 5px !important;
-	direction: ltr !important;
-	text-align: center;
-}
-
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
-	div#playbackController
-	div#uvpc-div
-	div.playbackSpeeds
-	h3.playback-header {
-	margin: 5px auto !important;
-	font-size: initial !important;
-}
-
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
-	div#playbackController
-	div#uvpc-div.active {
-	opacity: 0.69;
-	visibility: visible;
-	-o-transition: opacity 160ms ease visibility 160ms linear;
-	-moz-transition: opacity 160ms ease visibility 160ms linear;
-	transition: opacity 160ms ease visibility 160ms linear;
-	will-change: opacity, visibility;
+	background: #ffffff !important;
 }
 
 div.controlsOverlayTopRight
@@ -172,98 +153,36 @@ div.controlsOverlayTopRight
 	div.hideableTopButtons
 	div#playbackController
 	button#uvpc-btn {
-	margin: 0px 19px 5px 0px !important;
+	margin: 0px 20px 0px 0px !important;
 	font-size: 0.7em !important;
-	padding: 0px !important;
+	padding: 12px 0px 0px 0px !important;
+	transform: scale(0.9) !important;
 }
 
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
+/* Hotstar-specific Styles */
+
+div.controls-overlay
+	div.bottom-panel
+	div.controls-container
+	div.bottom-right-panel
 	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	div.range-stuff {
-	margin: 50px 15px 0px 15px !important;
+	div#uvpc-div {
+	bottom: calc(100vh - 88vh) !important;
+	right: calc(100vw - 95vw) !important;
+	background: #121212 !important;
+	opacity: 0.95 !important;
 }
 
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
+div.controls-overlay
+	div.bottom-panel
+	div.controls-container
+	div.bottom-right-panel
 	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	input[type="range"] {
-	display: block;
-	width: 100%;
-	margin: 0;
-	-webkit-appearance: none;
-	outline: none;
-}
-
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
-	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	input[type="range"]::-webkit-slider-runnable-track {
-	position: relative;
-	height: 12px;
-	border: 1px solid #b2b2b2;
-	border-radius: 5px;
-	background-color: #e2e2e2;
-	box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-}
-
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
-	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	input[type="range"]::-webkit-slider-thumb {
-	position: relative;
-	top: -5px;
-	width: 20px;
-	height: 20px;
-	border: 1px solid #999;
-	-webkit-appearance: none;
-	background-color: #fff;
-	box-shadow: inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
-	border-radius: 100%;
-	cursor: pointer;
-}
-
-div.controlsOverlayTopRight
-	div.topPanel
-	div.right
-	div.topButtons
-	div.hideableTopButtons
-	div#playbackController
-	div#uvpc-div.active
-	div.playbackSpeeds
-	output {
-	position: absolute;
-	top: 40px !important;
-	right: 80px !important;
-	display: block;
-	font-weight: bold;
-	width: 50px;
-	height: 24px;
-	border: 1px solid #e2e2e2;
-	background-color: #fff;
-	border-radius: 3px;
-	color: #777;
-	font-size: initial !important;
-	line-height: 24px;
-	text-align: center;
+	button#uvpc-btn {
+	height: 54px !important;
+	width: 54px !important;
+	font-size: 1em !important;
+	padding: 15px !important;
+	margin: 12px 5px 0px 0px !important;
+	transform: scale(1.4) !important;
 }

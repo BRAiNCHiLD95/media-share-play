@@ -1,7 +1,61 @@
 /**
- * Content Script
- * Has Access to the DOM & *some* Chrome APIs, operates within the browser tab(s).
+ * @author Brian Sam Thomas <thebrainchild95@gmail.com>
+ * @file Content-Script i.e. - does most of the heavy-lifting
  */
+
+/**
+ * List of playerDivs for supported OTTs.
+ */
+const playerDivs = {
+	netflix: "div.PlayerControlsNeo__button-control-row",
+	primevideo:
+		"div.controlsOverlayTopRight div.topPanel div.right div.topButtons div.hideableTopButtons",
+	hotstar:
+		"div.controls-overlay div.bottom-panel div.controls-container div.bottom-right-panel",
+};
+
+/**
+ * Waits for video element to be loaded, then resolves promise with the element.
+ * @returns {HTMLVideoElement}
+ */
+const fetchVideoElement = () => {
+	return new Promise((resolve, reject) => {
+		new MutationObserver((mutationRecords, observer) => {
+			Array.from(document.querySelectorAll("video")).forEach(element => {
+				if (element.currentSrc !== "") resolve(element);
+				observer.disconnect();
+			});
+		}).observe(document.documentElement, {
+			childList: true,
+			subtree: true,
+		});
+	});
+};
+
+/**
+ * Updates the BadgeText for the Extension
+ * @param {Port} port
+ * @param {HTMLVideoElement} video
+ */
+const updateBadgeText = (port, video) => {
+	port.postMessage({
+		badgeText: video.playbackRate,
+		video,
+	});
+};
+
+/**
+ * Based on the domain passed, deploys the UVP Controller
+ * @param {string} msg
+ * @param {Port} port
+ */
+const deployer = async (msg, port) => {
+	var videoElement = await fetchVideoElement();
+	if (!videoElement) return false;
+	var injectedController = await injectController(msg.domain);
+	if (!injectedController.success) return false;
+	videoElement.onloadeddata = attachListeners(port, videoElement);
+};
 
 /**
  * Creates a communication channel
@@ -14,83 +68,6 @@ const connectToServices = () => {
 	chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		deployer(msg, initContent);
 	});
-};
-
-window.addEventListener("load", connectToServices);
-
-/**
- * Based on the domain passed, deploy the controller element onto DOM
- * @param {string} msg
- * @param {Port} port
- */
-const deployer = async (msg, port) => {
-	var videoElement = await fetchVideoElement();
-	if (!videoElement) return false;
-	updateBadgeText(port, videoElement);
-	var injectedFa = await injectStyles();
-	if (!injectedFa.success) return false;
-	switch (msg.domain) {
-		case "netflix":
-			return deployNetflix(port, videoElement);
-		case "primevideo":
-			return deployAPV(port, videoElement);
-		default:
-			console.error("Don't really need this!");
-	}
-};
-
-/**
- * Deploys the UVP Controller for Amazon Prime Video
- * @param {Port} port
- * @param {HTMLVideoElement} videoElement
- */
-const deployAPV = async (port, videoElement) => {
-	var injectedController = await injectController("primevideo");
-	if (!injectedController.success) return false;
-    videoElement.onloadeddata = attachListeners(port, videoElement);
-};
-
-/**
- * Attaches Listeners to the controller
- * @param {Port} port
- * @param {HTMLVideoElement} videoElement
- */
-const attachListeners = (port, videoElement) => {
-    removeDuplicateControllers();
-	document
-		.getElementById("uvpc-btn")
-		.addEventListener("click", playBackToggler);
-	document
-		.getElementById("uvpc-value")
-		.addEventListener("input", event =>
-			valueChanged(port, event, videoElement)
-		);
-	document.getElementById("uvpc-value").value = videoElement.playbackRate;
-};
-
-/**
- * Deploys the UVP Controller for Netflix
- * @param {Port} port
- * @param {HTMLVideoElement} videoElement
- */
-const deployNetflix = async (port, videoElement) => {
-	var injectedController = await injectController("netflix");
-	if (!injectedController.success) return false;
-	videoElement.onloadeddata = attachListeners(port, videoElement);
-};
-
-
-/**
- * If something goes wrong and multiple controllers are injected,
- * this function will remove duplicate controllers.
- */
-const removeDuplicateControllers = () => {
-	var controllers = document.querySelectorAll("#playbackController");
-	if (controllers.length > 1) {
-		controllers.forEach((element, index) => {
-			if (index > 0) element.remove();
-		});
-	}
 };
 
 /**
@@ -113,11 +90,12 @@ const injectController = ottName => {
                     <input id="uvpc-value" type="range" name="speed" data-thumbwidth="20" step="0.25" min="0" max="4">
                     <output name="rangeVal">1x</output>
                 </div>
-            </div>`;
+			</div>`;
+		let cogsIcon = chrome.runtime.getURL("images/cogs.svg");
 		let videoControllerBtn = document.createElement("button");
 		videoControllerBtn.id = "uvpc-btn";
 		videoControllerBtn.style.background = "none";
-		videoControllerBtn.innerHTML = '<i class="fa fa-cogs"></fa>';
+		videoControllerBtn.innerHTML = `<img id="cogsIcon" src="${cogsIcon}">`;
 		main.innerHTML =
 			videoControllerDiv.outerHTML + videoControllerBtn.outerHTML;
 		playerDiv.insertBefore(main, playerDiv.lastChild);
@@ -127,16 +105,44 @@ const injectController = ottName => {
 };
 
 /**
- * List of playerDivs from different supported OTTs.
+ * If something goes wrong and multiple controllers are injected,
+ * this function will remove duplicate controllers.
  */
-const playerDivs = {
-	netflix: ".PlayerControlsNeo__button-control-row",
-	primevideo: ".controlsOverlayTopRight .topPanel .right .topButtons .hideableTopButtons",
+const removeDuplicateControllers = () => {
+	var controllers = document.querySelectorAll("#playbackController");
+	if (controllers.length > 1) {
+		controllers.forEach((element, index) => {
+			if (index > 0) element.remove();
+		});
+	}
+	return true;
 };
 
-const playBackToggler = event => {
-	document.getElementById("uvpc-div").classList.toggle("active");
+/**
+ * Attaches Listeners to the controller
+ * @param {Port} port
+ * @param {HTMLVideoElement} videoElement
+ */
+const attachListeners = (port, videoElement) => {
+	updateBadgeText(port, videoElement);
+	var done = removeDuplicateControllers();
+	if (done) {
+		document
+			.getElementById("uvpc-btn")
+			.addEventListener("click", playbackToggler);
+		document
+			.getElementById("uvpc-value")
+			.addEventListener("input", event =>
+				valueChanged(port, event, videoElement)
+			);
+		document.getElementById("uvpc-value").value = videoElement.playbackRate;
+	}
 };
+
+/**
+ * Toggles the visibility of the playback controller div
+ */
+const playbackToggler = () => document.getElementById("uvpc-div").classList.toggle("active");
 
 /**
  * When the playbackRate is changed, the output value
@@ -157,54 +163,4 @@ const valueChanged = (port, event, videoElement) => {
 	updateBadgeText(port, videoElement);
 };
 
-/**
- * Builds and injects Stylesheets for font awesome 4.7.0
- * and the playback controller to the page
- */
-const injectStyles = () => {
-	return new Promise((resolve, reject) => {
-		let headOfDoc = document.head;
-		let faLink = document.createElement("link");
-		faLink.id = "fa-uvpc";
-		faLink.href =
-			"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
-		faLink.rel = "stylesheet";
-		faLink.integrity =
-			"sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN";
-		faLink.crossOrigin = "anonymous";
-		headOfDoc.appendChild(faLink);
-		if (!headOfDoc.contains(faLink))
-			reject("Failed to inject styles to the Page");
-		resolve({ success: true, element: faLink });
-	});
-};
-
-/**
- * Waits for video element to be loaded, then resolves promise with the element.
- * @returns {HTMLVideoElement}
- */
-const fetchVideoElement = () => {
-	return new Promise((resolve, reject) => {
-		new MutationObserver((mutationRecords, observer) => {
-			Array.from(document.querySelectorAll("video")).forEach(element => {
-                if (element.currentSrc !== "") resolve(element);
-				observer.disconnect();
-			});
-		}).observe(document.documentElement, {
-			childList: true,
-			subtree: true,
-		});
-	});
-};
-
-/**
- * Updates the BadgeText for the Extension
- * @param {Port} port
- * @param {HTMLVideoElement} video
- */
-const updateBadgeText = (port, video) => {
-	port.postMessage({
-		badgeText: video.playbackRate,
-		video,
-	});
-};
+window.addEventListener("load", connectToServices);
