@@ -5,7 +5,7 @@ body {
 	padding: 0 !important;
 	width: 360px !important;
 	color: #ffffff !important;
-	background-color: rgba(0, 0, 0, 0.690) !important;
+	background-color: rgba(0, 0, 0, 0.69) !important;
 }
 
 div#main h6 {
@@ -19,17 +19,22 @@ span#version {
 	font-size: 0.8em !important;
 }
 
-div#ottDiv p#ottName {
+div#ottDiv p#ottHeader {
+	font-size: 1em !important;
+	margin: 0px 0px 10px 0px !important;
+}
+
+div#ottDiv a.ottLink {
+	margin: 0px -10px !important;
+	padding: 2px !important;
+}
+
+div#ottDiv a.ottLink p#ottName {
 	color: #ffffff !important;
 	text-decoration: underline !important;
 	font-size: 0.6em !important;
 	margin: 5px 0px !important;
 	line-height: 12px !important;
-}
-
-div#ottDiv p#ottHeader {
-	font-size: 1em !important;
-	margin: 0px 0px 10px 0px !important;
 }
 
 footer a#repolink {
@@ -41,8 +46,4 @@ footer a#repolink {
 
 footer a#repolink img {
 	margin: 0px 4px 4px 0px !important;
-}
-
-div#ottDiv a.ottLink {
-	margin: 0px -5px !important;
 }
