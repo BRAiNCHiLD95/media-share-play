@@ -15,24 +15,6 @@ const playerDivs = {
 };
 
 /**
- * Waits for video element to be loaded, then resolves promise with the element.
- * @returns {HTMLVideoElement}
- */
-const fetchVideoElement = () => {
-	return new Promise((resolve, reject) => {
-		new MutationObserver((mutationRecords, observer) => {
-			Array.from(document.querySelectorAll("video")).forEach(element => {
-				if (element.currentSrc !== "") resolve(element);
-				observer.disconnect();
-			});
-		}).observe(document.documentElement, {
-			childList: true,
-			subtree: true,
-		});
-	});
-};
-
-/**
  * Updates the BadgeText for the Extension
  * @param {Port} port
  * @param {HTMLVideoElement} video
@@ -75,10 +57,8 @@ const connectToServices = () => {
  * @param {String} ottName
  */
 const injectController = ottName => {
-	// OTT specific
 	let playerDiv = document.querySelector(playerDivs[ottName]);
 	if (!document.contains(playerDiv)) return false;
-	// cog
 	return new Promise((resolve, reject) => {
 		let main = document.createElement("div");
 		main.id = "playbackController";
@@ -142,7 +122,8 @@ const attachListeners = (port, videoElement) => {
 /**
  * Toggles the visibility of the playback controller div
  */
-const playbackToggler = () => document.getElementById("uvpc-div").classList.toggle("active");
+const playbackToggler = () =>
+	document.getElementById("uvpc-div").classList.toggle("active");
 
 /**
  * When the playbackRate is changed, the output value
@@ -161,6 +142,24 @@ const valueChanged = (port, event, videoElement) => {
 	output.innerHTML = controlVal + "x";
 	videoElement.playbackRate = event.target.valueAsNumber;
 	updateBadgeText(port, videoElement);
+};
+
+/**
+ * Waits for video element to be loaded, then resolves promise with the element.
+ * @returns {HTMLVideoElement}
+ */
+const fetchVideoElement = () => {
+	return new Promise((resolve, reject) => {
+		new MutationObserver((mutationRecords, observer) => {
+			Array.from(document.querySelectorAll("video")).forEach(element => {
+				if (element.currentSrc !== "") resolve(element);
+				observer.disconnect();
+			});
+		}).observe(document.documentElement, {
+			childList: true,
+			subtree: true,
+		});
+	});
 };
 
 window.addEventListener("load", connectToServices);
