@@ -11,6 +11,7 @@ div#playbackController div#uvpc-div {
 	direction: ltr !important;
 	text-align: center !important;
 	opacity: 0 !important;
+	box-shadow: 1px 1px 10px black !important;
 }
 
 div#playbackController div#uvpc-div.active {
