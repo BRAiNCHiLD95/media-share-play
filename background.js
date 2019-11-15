@@ -16,10 +16,9 @@ const hotstarRegex = /(http(s)?:\/\/.)?(www\.)?(hotstar.com\/in\/(tv|movies))/;
  */
 const sendToContentScript = (port, message, tabId) => {
 	if (port) {
-		console.log(`SENDING ${JSON.stringify(message, null, 2)} to Tab #${tabId}`);
 		chrome.tabs.sendMessage(tabId, message);
 	} else {
-		console.log("PORT GONE!");
+		console.error("PORT GONE!");
 	}
 };
 
@@ -73,7 +72,6 @@ const getMessenger = contentMessenger => {
 		};
 		contentMessenger.onMessage.addListener(message => {
 			if (message.initiated) {
-				console.info(`connected to ${contentMessenger.sender.tab.title}`);
 				chrome.tabs.onCreated.addListener(checkForOTTs);
 				chrome.tabs.onUpdated.addListener(checkForOTTs);
 			}
@@ -89,7 +87,6 @@ const getMessenger = contentMessenger => {
 			}
 		});
 		contentMessenger.onDisconnect.addListener(() => {
-			console.info("disconnected from backgroundjs");
 			chrome.tabs.onCreated.removeListener(checkForOTTs);
 			chrome.tabs.onUpdated.removeListener(checkForOTTs);
 			contentMessenger = null;

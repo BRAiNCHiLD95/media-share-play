@@ -1,7 +1,8 @@
 {
 	"name": "Ultimate Video Playback Controller",
-	"description": "An Ultimate Controller for all your HTML5 Video Playback Speed Needs",
-	"version": "1.3.0",
+	"short_name": "UVPC",
+	"description": "An Ultimate Controller manipulating Video Playback Speeds across OTT platforms",
+	"version": "1.4.0",
 	"manifest_version": 2,
 	"icons": {
 		"128": "images/icon_128.png"
@@ -21,18 +22,11 @@
 	},
 	"content_scripts": [
 		{
-			"matches": [
-				"http://www.netflix.com/watch/*",
-				"https://www.netflix.com/watch/*",
-				"http://www.primevideo.com/detail/*",
-				"https://www.primevideo.com/detail/*",
-				"http://www.hotstar.com/in*",
-				"https://www.hotstar.com/in*"
-			],
+			"matches": ["<all_urls>"],
 			"js": ["content.js"],
 			"css": ["content.css"]
 		}
 	],
 	"web_accessible_resources": ["images/cogs.svg"],
-	"permissions": ["tabs"]
+	"permissions": ["tabs", "storage"]
 }

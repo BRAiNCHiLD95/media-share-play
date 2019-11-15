@@ -36,7 +36,20 @@ const deployer = async (msg, port) => {
 	if (!videoElement) return false;
 	var injectedController = await injectController(msg.domain);
 	if (!injectedController.success) return false;
-	videoElement.onloadeddata = attachListeners(port, videoElement);
+
+	chrome.storage.sync.get(["uvpc"], data => {
+		if (data.uvpc && data.uvpc.ottName === msg.domain) {
+			videoElement.playbackRate = data.uvpc.playbackRate;
+			document.getElementById("rangeVal").innerHTML = data.uvpc.playbackRate+'x';
+			document.getElementById("uvpc-value").value = data.uvpc.playbackRate;
+		} else {
+			chrome.storage.sync.set({
+				uvpc: { ottName: msg.domain, playbackRate: videoElement.playbackRate },
+			});
+		}
+		updateBadgeText(port, videoElement);
+		videoElement.onloadeddata = attachListeners(port, videoElement);
+	});
 };
 
 /**
@@ -45,7 +58,6 @@ const deployer = async (msg, port) => {
  */
 const connectToServices = () => {
 	const initContent = chrome.runtime.connect({ name: "uvpc-b" });
-	console.log("connecting from contentjs", initContent);
 	initContent.postMessage({ initiated: true });
 	chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		deployer(msg, initContent);
@@ -68,7 +80,7 @@ const injectController = ottName => {
                 <h3 class="playback-header">Playback Rate</h3>
                 <div class="range-stuff">
                     <input id="uvpc-value" type="range" name="speed" data-thumbwidth="20" step="0.25" min="0" max="4">
-                    <output name="rangeVal">1x</output>
+                    <output id="rangeVal" name="rangeVal">1x</output>
                 </div>
 			</div>`;
 		let cogsIcon = chrome.runtime.getURL("images/cogs.svg");
@@ -141,7 +153,12 @@ const valueChanged = (port, event, videoElement) => {
 	position = ((controlVal - controlMin) / range) * 100;
 	output.innerHTML = controlVal + "x";
 	videoElement.playbackRate = event.target.valueAsNumber;
-	updateBadgeText(port, videoElement);
+	chrome.storage.sync.get(["uvpc"], data => {
+		let uvpc = data.uvpc;
+		uvpc.playbackRate = videoElement.playbackRate;
+		chrome.storage.sync.set({ uvpc });
+		updateBadgeText(port, videoElement);
+	});
 };
 
 /**
