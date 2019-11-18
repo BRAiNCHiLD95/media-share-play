@@ -2,7 +2,7 @@
 	"name": "Ultimate Video Playback Controller",
 	"short_name": "UVPC",
 	"description": "An Ultimate Controller manipulating Video Playback Speeds across OTT platforms",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"manifest_version": 2,
 	"icons": {
 		"128": "images/icon_128.png"
