@@ -14,6 +14,10 @@ const playerDivs = {
 		"div.controls-overlay div.bottom-panel div.controls-container div.bottom-right-panel",
 };
 
+var currentlyOn = null;
+
+const uvpc = { netflix: 1, primevideo: 1, hotstar: 1 };
+
 /**
  * Updates the BadgeText for the Extension
  * @param {Port} port
@@ -36,20 +40,21 @@ const deployer = async (msg, port) => {
 	if (!videoElement) return false;
 	var injectedController = await injectController(msg.domain);
 	if (!injectedController.success) return false;
-
-	chrome.storage.sync.get(["uvpc"], data => {
-		if (data.uvpc && data.uvpc.ottName === msg.domain) {
-			videoElement.playbackRate = data.uvpc.playbackRate;
-			document.getElementById("rangeVal").innerHTML = data.uvpc.playbackRate+'x';
-			document.getElementById("uvpc-value").value = data.uvpc.playbackRate;
-		} else {
-			chrome.storage.sync.set({
-				uvpc: { ottName: msg.domain, playbackRate: videoElement.playbackRate },
-			});
-		}
-		updateBadgeText(port, videoElement);
-		videoElement.onloadeddata = attachListeners(port, videoElement);
-	});
+	currentlyOn = msg.domain;
+	if (currentlyOn && videoElement && injectedController.success) {
+		chrome.storage.sync.get(["uvpc"], data => {
+			if (data.uvpc) {
+				videoElement.playbackRate = data.uvpc[currentlyOn];
+				document.getElementById("rangeVal").innerHTML =
+					data.uvpc[currentlyOn] + "x";
+				document.getElementById("uvpc-value").value = data.uvpc[currentlyOn];
+			} else {
+				chrome.storage.sync.set({ uvpc });
+			}
+			updateBadgeText(port, videoElement);
+			videoElement.onloadeddata = attachListeners(port, videoElement);
+		});
+	}
 };
 
 /**
@@ -60,6 +65,7 @@ const connectToServices = () => {
 	const initContent = chrome.runtime.connect({ name: "uvpc-b" });
 	initContent.postMessage({ initiated: true });
 	chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+		var currentlyOn = msg.domain;
 		deployer(msg, initContent);
 	});
 };
@@ -155,7 +161,7 @@ const valueChanged = (port, event, videoElement) => {
 	videoElement.playbackRate = event.target.valueAsNumber;
 	chrome.storage.sync.get(["uvpc"], data => {
 		let uvpc = data.uvpc;
-		uvpc.playbackRate = videoElement.playbackRate;
+		uvpc[currentlyOn] = videoElement.playbackRate;
 		chrome.storage.sync.set({ uvpc });
 		updateBadgeText(port, videoElement);
 	});
