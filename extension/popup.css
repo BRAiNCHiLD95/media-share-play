@@ -1,0 +1,49 @@
+html,
+body {
+	font-family: "Open Sans", sans-serif !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 360px !important;
+	color: #ffffff !important;
+	background-color: rgba(0, 0, 0, 0.69) !important;
+}
+
+div#main h6 {
+	text-align: center !important;
+	margin: 5px auto 0px !important;
+	font-size: 1.25em !important;
+}
+
+span#version {
+	text-align: center !important;
+	font-size: 0.8em !important;
+}
+
+div#ottDiv p#ottHeader {
+	font-size: 1em !important;
+	margin: 0px 0px 10px 0px !important;
+}
+
+div#ottDiv a.ottLink {
+	margin: 0px -10px !important;
+	padding: 2px !important;
+}
+
+div#ottDiv a.ottLink p#ottName {
+	color: #ffffff !important;
+	text-decoration: underline !important;
+	font-size: 0.6em !important;
+	margin: 5px 0px !important;
+	line-height: 12px !important;
+}
+
+footer a#repolink {
+	font-size: 0.8em !important;
+	text-decoration: underline !important;
+	margin: 0px 5px !important;
+	color: #ffffff !important;
+}
+
+footer a#repolink img {
+	margin: 0px 4px 4px 0px !important;
+}
