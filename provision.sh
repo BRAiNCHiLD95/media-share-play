@@ -5,7 +5,7 @@ apt update -y
 apt install -y git curl wget tar gzip findutils vim software-properties-common zip unzip iputils-ping net-tools
 
 printf "\n++++++++++++++++++++ App setup ++++++++++++++++++++\n"
-cd /uvpc
+cd /msp
 npm install --global yarn
 yarn
 
