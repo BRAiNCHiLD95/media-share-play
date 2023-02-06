@@ -1,25 +1,25 @@
 version: '3.8'
 
 services:
-  msp:
-    image: msp:latest
-    container_name: msp
-    build:
-      context: .
-      dockerfile: Containerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./:/msp
-      - msp-node:/msp/node_modules
-    restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    msp:
+        image: msp:latest
+        container_name: msp
+        build:
+            context: .
+            dockerfile: Containerfile
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./:/msp
+            - msp-node:/msp/node_modules
+        restart: unless-stopped
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
 
 networks:
-  default:
-    name: msp-net
+    default:
+        name: msp-net
 
 volumes:
-  msp-node:
-    name: msp-node-modules
+    msp-node:
+        name: msp-node-modules
